@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sign up</title>
+</head>
+<body>
+    <h1>Hi, register here</h1>
+      <input type="text" placeholder="username" id= "username">
+      <br>
+      <br>
+      <input type="text" placeholder="email" id= "email" >
+      <br>
+      <br>
+      <input type="password"  placeholder="password" id= "password">
+      <br>
+      <br>
+      <input type="text"  placeholder="city" id= "city">
+      <br>
+      <br>
+      <input type="number"  placeholder="age" id= "age">
+      <br>
+      <br>
+      <input type="text" placeholder="gender" id= "gender">
+      <br>
+      <br>
+      <button onclick="handleregister()">register</button>
+
+      <script>
+            const handleregister=()=>{
+                const username = document.getElementById("username").value;
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const city = document.getElementById("city").value;
+                const age = document.getElementById("age").value;
+                const gender = document.getElementById("gender").value;
+ 
+                 const payload = {
+                     username : username,
+                     email : email,
+                     password :password,
+                     city : city,
+                     age : age,
+                     gender : gender
+                 }
+                 console.log(payload);
+            }
+      </script>
+</body>
+</html>

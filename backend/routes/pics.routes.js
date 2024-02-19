@@ -4,29 +4,61 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {auth} = require('../middleware/auth.middleware');
 
-
 const picRouter = express.Router();
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); 
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); 
+  }
+});
+const upload = multer({ storage: storage });
 
-picRouter.post('/', auth, async(req,res)=> {
+picRouter.post('/', auth, upload.single('photo'), async(req, res) => {
+  try {
+    const { quote, device, commentsCount } = req.body;
+    const newPost = new PicModel({
+      quote,
+      photo: req.file.path, 
+      device,
+      commentsCount,
+      userID: req.user.userID 
+    });
+    await newPost.save();
+    res.status(201).send({ msg: "New post has been uploaded" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-      try {
-        const newPost = await PicModel(req.body);
-        await newPost.save();
-        res.status(201).send({ msg: "New post has been uploaded" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+picRouter.get('/', auth, async (req, res) => {
+  try {
+    const { device, minComments, maxComments } = req.query;
+    const filter = { userID: req.user.userID };
+
+    if (device) {
+      filter.device = device;
     }
-})
 
-picRouter.get('/', auth, async(req,res)=> {
-    try {
-      const allposts = await PicModel.find({userID: req.body.userID});
-      res.send({msg: "here is the list", allposts});
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (minComments || maxComments) {
+      filter.commentsCount = {};
+      if (minComments) {
+        filter.commentsCount.$gte = parseInt(minComments);
+      }
+      if (maxComments) {
+        filter.commentsCount.$lte = parseInt(maxComments);
+      }
     }
-})
+
+    const filteredPosts = await PicModel.find(filter);
+    res.send({ msg: "Filtered posts", filteredPosts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 picRouter.get('/:id', auth, async(req,res)=> {
 

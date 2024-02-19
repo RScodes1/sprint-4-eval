@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 require('dotenv').config()
-
 // modules of diff
 const {connection} = require('./config/db');
 const {userRouter} = require('./routes/user.routes');

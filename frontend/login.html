@@ -7,44 +7,38 @@
 </head>
 <body>
     <h1>Hi, register here</h1>
-      <input type="text" placeholder="username" id= "username">
-      <br>
-      <br>
+  
       <input type="text" placeholder="email" id= "email" >
       <br>
       <br>
       <input type="password"  placeholder="password" id= "password">
       <br>
-      <br>
-      <input type="text"  placeholder="city" id= "city">
-      <br>
-      <br>
-      <input type="number"  placeholder="age" id= "age">
-      <br>
-      <br>
-      <input type="text" placeholder="gender" id= "gender">
-      <br>
-      <br>
-      <button onclick="handleregister()">register</button>
+     
+      <button onclick="handlelogin()">login</button>
 
       <script>
-            const handleregister=()=>{
-                const username = document.getElementById("username").value;
+            const handlelogin=()=>{
                 const email = document.getElementById("email").value;
                 const password = document.getElementById("password").value;
-                const city = document.getElementById("city").value;
-                const age = document.getElementById("age").value;
-                const gender = document.getElementById("gender").value;
+               
  
                  const payload = {
-                     username : username,
                      email : email,
                      password :password,
-                     city : city,
-                     age : age,
-                     gender : gender
+                    
                  }
-                 console.log(payload);
+                //  console.log(payload);
+                fetch('https://calm-lime-narwhal-sock.cyclic.app/users/register',{
+                    method : "POST",
+                    headers : {
+                        "Content-type" : "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                    
+                }).then((res) => res.json())
+                 .then(data=> console.log(data))
+                 
+                 .catch((error) => console.log(error))
             }
       </script>
 </body>
